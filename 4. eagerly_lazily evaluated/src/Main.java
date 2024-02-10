@@ -1,13 +1,16 @@
 import java.util.function.Supplier;
 class DelayedEvaluation {
-    private final Supplier<Integer> delayedEvaluation;
-
+    private Supplier<Integer> delayedEvaluation;
     public DelayedEvaluation(Supplier<Integer> supplier) {
         this.delayedEvaluation = supplier;
     }
-
+    private int sum;
     public int eval() {
-        return delayedEvaluation.get();
+        synchronized (DelayedEvaluation.class){
+            sum = delayedEvaluation.get();
+            delayedEvaluation = null;
+            return sum;
+        }
     }
 }
 
